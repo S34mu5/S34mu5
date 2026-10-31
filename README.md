@@ -1,6 +1,7 @@
 <p align="center">
   <img src="https://streak-stats.demolab.com?user=S34mu5&theme=dracula&border_radius=5" alt="GitHub Streak" />
 </p>
+<p align="center"><img src="koi/koi.gif" width="256" alt="Koi" /></p>
 
 <!--
 **S34mu5/S34mu5** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
