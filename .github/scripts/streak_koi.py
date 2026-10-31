@@ -8,13 +8,16 @@ from PIL import Image, ImageSequence
 warnings.simplefilter("ignore")
 
 streak_path, gif_path, out_path = sys.argv[1:4]
-W, H = 718, 195            # README content area width, card height
+W, H = 846, 195            # README content area width, card height
 FW, FH = 120, 60           # koi size on screen
 LOOP_S = 120               # seconds before the swim repeats
-FPS = 10                   # path samples per second
+FPS = 25                   # path samples per second
 SURFACES = 4               # times per loop the koi comes up for air
 GLASS = 0.55               # card background opacity (frosted glass)
 BLUR = 4                   # blur of the koi seen through the card
+BUTTON = '#9198a1'         # colour of the 鯉 button (same as GitHub's pencil)
+# outline of 鯉 (Noto Sans CJK JP, 1000-unit box) so it needs no font
+KANJI = 'M370 726C392 765 416 818 424 853L474 833C463 799 440 747 416 708ZM280 734C301 788 319 860 323 907L374 895C369 848 350 777 328 723ZM193 735C204 794 209 869 205 919L259 910C261 862 255 786 243 728ZM107 726C99 805 79 885 34 931L84 961C134 910 151 824 161 739ZM308 190C294 226 276 264 258 293H153C171 259 187 225 200 190ZM178 40C156 134 110 256 36 349C52 357 76 377 89 392L99 379V680H444V293H326C352 251 377 201 396 155L353 126L340 130H223C232 103 240 76 247 50ZM492 94V539H673V653H495V720H673V870H441V938H962V870H746V720H930V653H746V539H929V94ZM159 515H241V618H159ZM295 515H381V618H295ZM159 355H241V456H159ZM295 355H381V456H295ZM558 346H677V473H558ZM742 346H861V473H742ZM558 159H677V285H558ZM742 159H861V285H742Z'
 rng = random.Random(datetime.date.today().isoformat())
 
 # ---------------------------------------------------------------- sprites
@@ -96,7 +99,7 @@ goal = None
 P, A, SURF = [], [], []
 for k in range(N):
     # pick a new place to wander to every few seconds
-    if goal is None or np.linalg.norm(goal - pos) < 30 or rng.random() < 0.004:
+    if goal is None or np.linalg.norm(goal - pos) < 30 or rng.random() < 0.0016:
         if rng.random() < 0.5:   # half the time, head for one side of the card
             gx = rng.choice([rng.uniform(margin, cx0), rng.uniform(cx0 + cw, W - margin)])
         else:
@@ -120,7 +123,7 @@ for k in range(N):
     max_turn = math.radians(110) * dt
     head += max(-max_turn, min(max_turn, diff)) + rng.gauss(0, 0.01)
     ts = 5 if surfacing else target_speed
-    speed += (ts - speed) * 0.08
+    speed += (ts - speed) * 0.035
     pos = pos + speed * dt * np.array([math.cos(head), math.sin(head)])
     pos = np.clip(pos, 8, [W - 8, H - 8])
     P.append(pos.copy()); A.append(head); SURF.append(surfacing)
@@ -136,11 +139,14 @@ for j in range(K):
     h00, h10, h01, h11 = 2*t**3 - 3*t**2 + 1, t**3 - 2*t**2 + t, -2*t**3 + 3*t**2, t**3 - t**2
     P[N - K + j] = h00 * p0 + h10 * v0 + h01 * p1 + h11 * v1
     SURF[N - K + j] = False
+# smooth the whole lap (it wraps around) so the motion is fluid
+kern = np.exp(-0.5 * (np.arange(-12, 13) / 4.0) ** 2); kern /= kern.sum()
+P = np.stack([np.convolve(np.r_[P[-12:, i], P[:, i], P[:12, i]], kern, mode="valid") for i in (0, 1)], 1)
 P = np.clip(P, 8, [W - 8, H - 8])
 # heading and turn rate from the final path
 d = np.diff(np.vstack([P, P[:1]]), axis=0)
 ang = np.unwrap(np.arctan2(d[:, 1], d[:, 0]))
-turn = np.convolve(np.gradient(ang) * FPS, np.ones(5) / 5, mode="same")
+turn = np.convolve(np.gradient(ang) * FPS, np.ones(9) / 9, mode="same")
 state = []
 cur = "S"
 for tr in turn:
@@ -216,6 +222,7 @@ svg = f"""<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org
 <g mask='url(#koi_outside)'><use href='#koi_scene'/><use href='#koi_ripples'/></g>
 <g clip-path='url(#koi_glass)'><use href='#koi_scene' filter='url(#koi_blur)'/><use href='#koi_ripples' filter='url(#ripple_blur)'/></g>
 {card}
+<g transform='translate({W - 17},{H - 17}) scale(0.016)'><title>鯉 · cómo funciona este koi</title><path fill='{BUTTON}' d='{KANJI}'/></g>
 </svg>"""
 open(out_path, "w", encoding="utf-8").write(svg)
 print(f"wrote {out_path} ({len(svg) // 1024} KB), surfaces at {[round(s / FPS) for s in surf_at]}s")
