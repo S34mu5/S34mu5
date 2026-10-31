@@ -222,7 +222,7 @@ svg = f"""<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org
 <g mask='url(#koi_outside)'><use href='#koi_scene'/><use href='#koi_ripples'/></g>
 <g clip-path='url(#koi_glass)'><use href='#koi_scene' filter='url(#koi_blur)'/><use href='#koi_ripples' filter='url(#ripple_blur)'/></g>
 {card}
-<g transform='translate({W - 17},{H - 17}) scale(0.016)'><title>鯉 · cómo funciona este koi</title><path fill='{BUTTON}' d='{KANJI}'/></g>
+<g transform='translate({W - 17},{H - 17}) scale(0.016)'><title>鯉 · how this koi works</title><path fill='{BUTTON}' d='{KANJI}'/></g>
 </svg>"""
 open(out_path, "w", encoding="utf-8").write(svg)
 print(f"wrote {out_path} ({len(svg) // 1024} KB), surfaces at {[round(s / FPS) for s in surf_at]}s")
