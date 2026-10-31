@@ -1,26 +1,28 @@
-# 鯉 · El koi de mi perfil
+# 鯉 · The koi on my profile
 
-Debajo de la tarjeta de racha nada un koi en pixel art. No es un dibujo fijo: se genera a partir de mi actividad pública en GitHub y se redibuja él solo.
+Behind the streak card swims a pixel-art koi. It isn't a fixed drawing: it grows out of my public GitHub activity and redraws itself.
 
-## De dónde sale el pez
+> The koi itself is drawn by **[git-koi](https://github.com/yalongwastaken/git-koi)** by [Anthony Yalong (@yalongwastaken)](https://github.com/yalongwastaken), released under the MIT licence. All the credit for the fish, its colours and its patterns goes to that project; this profile only adds the swimming, the pond and the glass card around it.
 
-Lo dibuja [git-koi](https://github.com/yalongwastaken/git-koi) cada noche (00:20 UTC) con los datos públicos de la cuenta:
+## Where the fish comes from
 
-- **Color base:** el cuerpo elegido en el workflow (`white`). Existen también `black`, `asagi`, `tea`, `gold` y `platinum`.
-- **Manchas = lenguajes.** Cada lenguaje de mis repos públicos (y de los repos públicos a los que contribuyo) se asigna, por el color que le da GitHub, al pigmento koi más cercano: rojo (*beni*), naranja, amarillo (*ki*) o azul (*ai*). Los lenguajes grises o sin color pasan a negro (*sumi*). El pigmento con más peso marca el patrón principal, el segundo añade manchas o costados y el tercero tiñe la base de las aletas.
-- **Tamaño = contribuciones.** Con pocas contribuciones el koi es joven, pequeño y de colores pálidos. Al acumular más, crece y se ve con todos los colores.
-- **Rachas.** La racha actual pinta de dorado los bordes de las aletas. La racha más larga hace los colores más vivos.
+git-koi draws it every night (00:20 UTC) from the account's public data:
 
-## Cómo nada
+- **Base body:** the body chosen in the workflow (`white`). The others are `black`, `asagi`, `tea`, `gold` and `platinum`.
+- **Patches = languages.** Each language in my public repos (and in public repos I contribute to) is mapped, by its GitHub colour, to the nearest koi pigment: red (*beni*), orange, yellow (*ki*) or blue (*ai*). Grey or colourless languages become black (*sumi*). The strongest pigment sets the main pattern, the second adds spots or sides, and the third tints the fin roots.
+- **Size = contributions.** With few contributions the koi is young, small and pale. As contributions add up it grows and shows its full colours.
+- **Streaks.** The current streak paints the fin edges gold. The longest streak makes the colours more vivid.
 
-- Cada día recorre un camino aleatorio distinto: cambia de rumbo y de velocidad, evita los bordes y pasa por detrás de la tarjeta, que hace de cristal esmerilado.
-- Va recto en línea recta y se curva hacia el lado al que gira.
-- De vez en cuando frena y sube a respirar: asoma el hocico y deja ondas en el agua.
+## How it swims
 
-## Cómo está hecho
+- Every day it follows a new random path: it changes course and speed, keeps off the edges, and passes behind the card, which acts as frosted glass.
+- It swims straight on straight stretches and bends into its turns.
+- Now and then it slows down and rises to the surface, the way koi do when they feed: its mouth breaks the water and leaves ripples.
 
-- [`.github/workflows/koi.yml`](../.github/workflows/koi.yml) dibuja `koi/koi.gif` con git-koi.
-- [`.github/workflows/streak-koi.yml`](../.github/workflows/streak-koi.yml) descarga la tarjeta de [GitHub Readme Streak Stats](https://github.com/DenverCoder1/github-readme-streak-stats) cada 6 horas y ejecuta [`.github/scripts/streak_koi.py`](../.github/scripts/streak_koi.py). El script endereza los fotogramas del koi, genera el recorrido del día y lo junta todo en un solo SVG animado: [`koi/streak-koi.svg`](streak-koi.svg).
-- Es un SVG y no un GIF para que se mueva siempre, sin botón de play.
+## How it's made
 
-[← Volver al perfil](https://github.com/S34mu5)
+- [`.github/workflows/koi.yml`](../.github/workflows/koi.yml) draws `koi/koi.gif` with git-koi.
+- [`.github/workflows/streak-koi.yml`](../.github/workflows/streak-koi.yml) fetches the [GitHub Readme Streak Stats](https://github.com/DenverCoder1/github-readme-streak-stats) card every 6 hours and runs [`.github/scripts/streak_koi.py`](../.github/scripts/streak_koi.py). The script straightens the koi's frames, generates the day's path and combines everything into one animated SVG: [`koi/streak-koi.svg`](streak-koi.svg).
+- It's an SVG rather than a GIF so it always moves, with no play button.
+
+[← Back to profile](https://github.com/S34mu5)
