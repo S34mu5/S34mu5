@@ -1,0 +1,65 @@
+name: Streak koi
+
+# Combines the GitHub streak card and the koi into one animated SVG
+# (koi/streak-koi.svg), with the koi swimming behind the numbers.
+
+on:
+  schedule:
+    # Refresh the streak numbers every 6 hours.
+    - cron: "40 */6 * * *"
+  workflow_run:
+    workflows: [Koi]
+    types: [completed]
+  workflow_dispatch:
+  push:
+    paths: [.github/workflows/streak-koi.yml]
+
+permissions:
+  contents: write
+
+concurrency: koi
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Fetch the streak card
+        shell: bash
+        run: |
+          curl -fsSL --retry 3 -o /tmp/streak.svg \
+            "https://streak-stats.demolab.com/?user=${{ github.repository_owner }}&theme=dracula&border_radius=5"
+          grep -q "outer_rectangle" /tmp/streak.svg
+      - name: Put the koi behind the streak card
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64, re
+          svg = open("/tmp/streak.svg", encoding="utf-8").read()
+          gif = base64.b64encode(open("koi/koi.gif", "rb").read()).decode()
+          m = re.search(r"viewBox='0 0 ([\d.]+) ([\d.]+)'", svg)
+          w, h = float(m.group(1)), float(m.group(2))
+          koi = (
+              f"<image href='data:image/gif;base64,{gif}' width='{h}' height='{h}' y='0'>"
+              f"<animate attributeName='x' from='{-h}' to='{w}' dur='18s' repeatCount='indefinite'/>"
+              "</image>"
+          )
+          start = svg.index("<g clip-path='url(#outer_rectangle)'>")
+          end_bg = svg.index("</g>", start) + len("</g>")
+          open("koi/streak-koi.svg", "w", encoding="utf-8").write(svg[:end_bg] + koi + svg[end_bg:])
+          PY
+      - name: Commit if it changed
+        shell: bash
+        run: |
+          git add koi/streak-koi.svg
+          if git diff --cached --quiet; then
+            echo "Unchanged; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --quiet --message "koi: refresh streak koi"
+          git pull --rebase --quiet
+          git push --quiet
