@@ -99,7 +99,7 @@ svg = f"""<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org
 <mask id='koi_outside'><rect width='{W}' height='{H}' fill='white'/><rect x='{cx0}' y='0' width='{cw}' height='{ch}' rx='{rx}' fill='black'/></mask>
 </defs>
 <g mask='url(#koi_outside)'><use href='#koi'/></g>
-<g clip-path='url(#koi_glass)'><use href='#koi' filter='url(#koi_blur)/></g>
+<g clip-path='url(#koi_glass)'><use href='#koi' filter='url(#koi_blur)'/></g>
 <defs><g id='koi'>
 <animateMotion dur='{LOOP_S}s' repeatCount='indefinite' rotate='auto' path='{path}'/>
 {sprite(straight64, "visible;hidden;visible;hidden")}
