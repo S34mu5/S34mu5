@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="koi/streak-koi.svg" alt="GitHub Streak" />
+  <a href="koi/README.md" title="鯉 · cómo funciona este koi"><img src="koi/streak-koi.svg" alt="GitHub Streak con un koi nadando" /></a>
 </p>
 
 <!--
